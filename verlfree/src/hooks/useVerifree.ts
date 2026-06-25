@@ -4,13 +4,16 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useMemo } from "react";
 import VeriFree from "../lib/contracts/Verifree"
 import { getContractAddress } from "../components/genlayer/client";
-import { useWallet } from "../components/genlayer/wallet";
+import { usePrivy, useWallets } from "@privy-io/react-auth";
 import type { Job, JobApplication, UserProfile } from "../lib/types/types";
 import { toast } from "sonner";
 
 
 export function useVeriFreeContract(): VeriFree | null {
-    const { address } = useWallet();
+    const { wallets, ready } = useWallets();
+    const { logout } = usePrivy();
+    const embeddedWallet = wallets[0];
+    const address = embeddedWallet?.address;
     const contractAddress = getContractAddress();
 
     return useMemo(() => {
@@ -429,7 +432,7 @@ export function useRejectFreelancer() {
 
     return useMutation({
         mutationFn: async ({
-            job_id, 
+            job_id,
             freelancer_address,
         }: {
             job_id: string;
@@ -456,7 +459,7 @@ export function useAIShortlist() {
 
     return useMutation({
         mutationFn: async ({
-            job_id, 
+            job_id,
         }: {
             job_id: string;
         }) => {
@@ -470,6 +473,6 @@ export function useAIShortlist() {
             await queryClient.invalidateQueries({
                 queryKey: ["job_applications"],
             });
-        }   
+        }
     });
 }

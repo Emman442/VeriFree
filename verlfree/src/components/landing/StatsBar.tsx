@@ -34,7 +34,7 @@ export default function StatsBar() {
     const totalEscrowed = calculateTotalEscrowFromCompletedJobs(completedJobs || [])
   const stats = [
     { label: "Total Jobs Completed", value: completedJobs?.length || 0, suffix: "" },
-    { label: "Total Value Escrowed", value: totalEscrowed, suffix: " USDC" },
+    { label: "Total Value Escrowed", value: totalEscrowed, suffix: " $GEN" },
     { label: "Average Payout Time", value: 45, suffix: " Seconds" },
   ];
 

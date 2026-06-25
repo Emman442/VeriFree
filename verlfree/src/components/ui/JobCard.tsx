@@ -8,9 +8,13 @@ import Link from "next/link";
 import { useWallet } from "../genlayer/wallet";
 import { toast } from "sonner";
 import { Job } from "@/lib/types/types";
+import { usePrivy, useWallets } from "@privy-io/react-auth"
 
 export default function JobCard({ job, setSelectedJob, setIsApplyModalOpen }: { job: Job; setSelectedJob: (job: any) => void; setIsApplyModalOpen: (isOpen: boolean) => void }) {
-    const { address } = useWallet()
+      const { wallets, ready } = useWallets();
+  const { logout } = usePrivy();
+  const embeddedWallet = wallets[0];
+  const address = embeddedWallet?.address;
 
     const { data: userProfile } = useUserProfile(address || "")
     const handleOpenApply = (job: any) => {
@@ -66,7 +70,7 @@ export default function JobCard({ job, setSelectedJob, setIsApplyModalOpen }: { 
                     </div>
                     <div className="flex flex-row md:flex-col justify-between md:items-end gap-4 shrink-0">
                         <div className="text-left md:text-right">
-                            <p className="text-2xl font-black text-foreground">{job.escrow_amount} USDC</p>
+                            <p className="text-2xl font-black text-foreground">{job.escrow_amount} $GEN</p>
                             <p className="text-xs text-muted-foreground uppercase tracking-widest">Fixed Price</p>
                         </div>
 

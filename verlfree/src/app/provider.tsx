@@ -1,13 +1,12 @@
 "use client";
-
-import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "sonner";
-import { WalletProvider } from "@/components/genlayer/WalletProvider";
 
-export function Providers({ children }: { children: React.ReactNode }) {
-  // Use useState to ensure QueryClient is only created once per component lifecycle
-  // This prevents the client from being recreated on every render
+import { PrivyProvider } from '@privy-io/react-auth';
+import { useState } from "react";
+
+export default function Providers({ children }: { children: React.ReactNode }) {
+
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -20,16 +19,69 @@ export function Providers({ children }: { children: React.ReactNode }) {
       })
   );
 
+
+
+   const privyAppId = process.env.NEXT_PUBLIC_PRIVY_APP_ID;
+   const privyClientId = process.env.NEXT_PUBLIC_PRIVY_CLIENT_ID;
+    // Safety check
+  if (!privyAppId || !privyClientId) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-xl font-bold">Configuration Error</h2>
+          <p className="text-muted-foreground">Privy App ID is missing. Check environment variables.</p>
+        </div>
+      </div>
+    );
+  }
+
+
   return (
     <QueryClientProvider client={queryClient}>
-      <WalletProvider>
+      <PrivyProvider
+        appId={privyAppId!}
+        clientId={privyClientId!}
+        config={{
+          embeddedWallets: {
+            ethereum: {
+              createOnLogin: 'users-without-wallets'
+            }
+          },
+          loginMethods: ['wallet', 'email', 'google', 'apple'],
+          supportedChains: [
+            {
+              id: 61999,
+              name: "GenLayer Studio",
+              nativeCurrency: { name: "GEN", symbol: "GEN", decimals: 18 },
+              rpcUrls: {
+                default: { http: ["https://studio.genlayer.com/api"] }, // Use the correct RPC
+              },
+            },
+          
+            // You can also add Base, Ethereum, etc.
+          ],
+
+        }}
+      >
         {children}
-      </WalletProvider>
+      </PrivyProvider>
       <Toaster
-        position="bottom-right"
+        position="top-right"
         theme="dark"
         richColors
+        closeButton
+        offset="80px"
+        toastOptions={{
+          style: {
+            background: 'hsl(var(--card))',
+            border: '1px solid hsl(var(--border))',
+            color: 'hsl(var(--foreground))',
+            boxShadow: '0 8px 32px hsl(var(--background) / 0.8)',
+          },
+        }}
       />
     </QueryClientProvider>
   );
 }
+
+

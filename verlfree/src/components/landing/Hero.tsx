@@ -99,7 +99,7 @@ export default function Hero() {
             <div className="flex justify-between items-start mb-6">
               <div>
                 <h3 className="text-xl font-bold mb-1">Modern React Landing Page</h3>
-                <p className="text-sm text-muted-foreground">Budget: 500 USDC</p>
+                <p className="text-sm text-muted-foreground">Budget: 500 $GEN</p>
               </div>
               <Badge variant="outline" className="border-primary/50 text-primary">
                 completed

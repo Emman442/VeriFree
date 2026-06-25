@@ -16,7 +16,7 @@ import {
   DialogDescription
 } from "@/components/ui/dialog";
 import { Search, Filter, Clock, Sparkles, } from "lucide-react";
-import { useWallet } from "@/components/genlayer/wallet";
+import { usePrivy, useWallets } from "@privy-io/react-auth";
 import { toast } from "sonner";
 import { useGetJobs, useApplyToJob } from "@/hooks/useVerifree";
 import JobCard from "@/components/ui/JobCard";
@@ -25,7 +25,10 @@ import Link from "next/link";
 
 export default function JobBoard() {
   const { isFetching, data: jobs } = useGetJobs()
-  const { address } = useWallet()
+  const { wallets, ready } = useWallets();
+  const { logout } = usePrivy();
+  const embeddedWallet = wallets[0];
+  const address = embeddedWallet?.address;
   const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
   const [selectedJob, setSelectedJob] = useState<any>(null);
   const [coverNote, setCoverNote] = useState("");
@@ -101,12 +104,12 @@ export default function JobBoard() {
               </div>
             </div>
             <div>
-              <h3 className="font-bold mb-4 uppercase text-xs tracking-widest text-primary/80">Budget (USDC)</h3>
+              <h3 className="font-bold mb-4 uppercase text-xs tracking-widest text-primary/80">Budget ($GEN)</h3>
               <div className="space-y-4">
                 <input type="range" className="w-full accent-primary" min="0" max="5000" />
                 <div className="flex justify-between text-xs text-muted-foreground">
-                  <span>0 USDC</span>
-                  <span>5000+ USDC</span>
+                  <span>0 $GEN</span>
+                  <span>5000+ $GEN</span>
                 </div>
               </div>
             </div>
@@ -162,7 +165,7 @@ export default function JobBoard() {
             <Button variant="ghost" onClick={() => setIsApplyModalOpen(false)}>Cancel</Button>
             <Button
               onClick={handleApply}
-              disabled={!coverNote }
+              disabled={!coverNote}
               className="bg-primary min-w-[140px]"
             >
               {isApplying ? "Submitting..." : "Submit Application"}

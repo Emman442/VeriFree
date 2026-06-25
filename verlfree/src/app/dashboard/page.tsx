@@ -21,12 +21,14 @@ import {
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useGetClientJobs, useGetFreelancerApplications, useGetFreelancerJobs, useGetJobApplications, useGetJobs, useUserProfile } from "@/hooks/useVerifree";
-import { useWallet } from "@/components/genlayer/wallet";
 import { Job, JobApplication } from "@/lib/types/types";
+import { usePrivy, useWallets } from "@privy-io/react-auth"
 
 export default function Dashboard() {
-  const { address } = useWallet();
-
+    const { wallets, ready } = useWallets();
+    const { logout } = usePrivy();
+    const embeddedWallet = wallets[0];
+    const address = embeddedWallet?.address;
   // ALL HOOKS MUST BE AT THE TOP
   const { isFetching: isFetchingProfile, data: fetchedProfile } = useUserProfile(address!);
   const { isFetching: isFetchingClientJobs, data: clientJobs = [] } = useGetClientJobs(address || "");
@@ -95,12 +97,12 @@ export default function Dashboard() {
 
   // Stats based on role
   const stats = isClient ? [
-    { label: "Total Escrowed", value: fetchedProfile?.total_spent, suffix: " USDC", icon: Wallet },
+    { label: "Total Escrowed", value: fetchedProfile?.total_spent, suffix: " $GEN", icon: Wallet },
     { label: "Active Jobs", value: 2, suffix: "", icon: Briefcase },
     { label: "Pending Applicants", value: 8, suffix: "", icon: Users },
     { label: "Success Rate", value: fetchedProfile?.reputation_score, suffix: "%", icon: CheckCircle2 },
   ] : [
-    { label: "Total Earned", value: fetchedProfile?.total_earned, suffix: " USDC", icon: TrendingUp },
+    { label: "Total Earned", value: fetchedProfile?.total_earned, suffix: " $GEN", icon: TrendingUp },
     { label: "Active Projects", value: 1, suffix: "", icon: Rocket },
     { label: "My Applications", value: freelancerApps?.length, suffix: "", icon: Clock },
     { label: "Reputation", value: fetchedProfile?.reputation_score, suffix: "", icon: Trophy },
@@ -357,7 +359,7 @@ function JobRow({ job, index }: { job: any; index: number }) {
             </div>
             <div className="flex items-center gap-8 w-full md:w-auto justify-between">
               <div className="text-right">
-                <p className="font-black text-xl text-foreground">{job.escrow_amount} USDC</p>
+                <p className="font-black text-xl text-foreground">{job.escrow_amount} $GEN</p>
                 <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">In Escrow</p>
               </div>
               <Button size="sm" className="bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all min-w-[140px]">

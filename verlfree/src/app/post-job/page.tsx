@@ -61,7 +61,7 @@ export default function PostJob() {
     }
 
     if (!formData.budget || Number(formData.budget) <= 0) {
-      toast.error("Please enter a valid USDC budget.");
+      toast.error("Please enter a valid $GEN budget.");
       return;
     }
 

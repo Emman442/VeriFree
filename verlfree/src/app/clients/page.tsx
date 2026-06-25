@@ -45,7 +45,7 @@ export default function ClientsPage() {
             Scale your team with <span className="gradient-text">confidence.</span>
           </h1>
           <p className="text-xl text-muted-foreground leading-relaxed">
-            Eliminate the stress of hiring. VeriFree uses AI to ensure your project requirements are met before a single USDC token is released.
+            Eliminate the stress of hiring. VeriFree uses AI to ensure your project requirements are met before a single $GEN token is released.
           </p>
           <div className="mt-10 flex justify-center gap-4">
             <Button asChild size="lg" className="bg-primary hover:bg-primary/90">
