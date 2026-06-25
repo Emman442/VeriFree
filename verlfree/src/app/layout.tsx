@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import  Providers  from './provider';
+import Providers from './provider';
 export const metadata: Metadata = {
   title: 'VeriFree',
   description: 'Decentralized freelance marketplace built on GenLayer, powered by AI and blockchain technology.',
